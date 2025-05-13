@@ -1,4 +1,4 @@
-const books = [
+let books = [
   {
     Bid: "B001",
     Bname: "The Great Gatsby",
@@ -29,7 +29,7 @@ const books = [
   },
   {
     Bid: "B005",
-    Bname: "The Catcher in the Rye",
+    Bname: "The Great Gatsby",
     Bpd: "2022-07-20",
     Bcountry: "USA",
     Bprice: "13.25",
@@ -46,16 +46,16 @@ function renderBooksTable() {
   books.forEach((book) => {
     const row = document.createElement("tr");
     row.innerHTML = `
-        <td>${book.Bid}</td>
-        <td>${book.Bname}</td>
-        <td>${book.Bpd}</td>
-        <td>${book.Bcountry}</td>
-        <td>${book.Bprice}</td>
-        <td>
+    <td>${book.Bid}</td>
+    <td>${book.Bname}</td>
+    <td>${book.Bpd}</td>
+    <td>${book.Bcountry}</td>
+    <td>${book.Bprice}</td>
+    <td>
         <a href="#" onclick="updateBook('${book.Bid}')">Update</a>
         <a href="#" onclick="deleteBook('${book.Bid}')">Delete</a>
-        </td>
-        `;
+    </td>
+    `;
 
     tableBody.appendChild(row);
   });
@@ -67,6 +67,7 @@ function createUpdateBook() {
   const bpd = document.getElementById("Bpd").value;
   const bcountry = document.getElementById("Bcountry").value;
   const bprice = document.getElementById("Bprice").value;
+  const bookform = document.getElementById("bookForm");
 
   const newBook = {
     Bid: bid,
@@ -76,31 +77,20 @@ function createUpdateBook() {
     Bprice: bprice,
   };
 
-  console.log("Book to add/update: ", newBook); //For debugging
+  console.log("New book: ", newBook); //For debugging
 
-  const existingIndex = books.findIndex((book) => {
-    return book.Bid == bid;
-  });
-
-  console.log("Existing index: ", existingIndex); //For debugging
-
-  if (editMode == "Create" && existingIndex == -1) {
+  if (editMode == "Create") {
     books.push(newBook);
-  } else if (editMode == "Update" && existingIndex !== -1) {
+  } else if (editMode == "Update") {
     books[editIndex] = newBook;
   }
 
   renderBooksTable();
-
-  const bookForm = document.getElementById("bookForm");
-  bookForm.reset();
-  document.getElementById("Bid").disabled = false;
+  bookform.reset();
   editMode = "Create";
-  editIndex = -1;
+  document.getElementById("Bid").disabled = false;
 
-  console.log("Books array after change: ", books); //For debugging
-  console.log("Edit Mode: ", editMode); //For debugging
-  console.log("Edit Index: ", editIndex); //For debugging
+  console.log(`Edit Mode: ${editMode}`); //For debugging
 
   return false;
 }
@@ -110,23 +100,23 @@ function updateBook(bid) {
     return book.Bid == bid;
   });
 
-  const bookToUpdate = books[index];
+  const book = books[index];
 
-  console.log("Book to update: ", bookToUpdate); //For debugging
+  console.log("Book to update: ", book); //For debugging
 
-  document.getElementById("Bid").value = bookToUpdate.Bid;
-  document.getElementById("Bname").value = bookToUpdate.Bname;
-  document.getElementById("Bpd").value = bookToUpdate.Bpd;
-  document.getElementById("Bcountry").value = bookToUpdate.Bcountry;
-  document.getElementById("Bprice").value = bookToUpdate.Bprice;
+  document.getElementById("Bid").value = book.Bid;
+  document.getElementById("Bname").value = book.Bname;
+  document.getElementById("Bpd").value = book.Bpd;
+  document.getElementById("Bcountry").value = book.Bcountry;
+  document.getElementById("Bprice").value = book.Bprice;
 
   document.getElementById("Bid").disabled = true;
 
   editMode = "Update";
   editIndex = index;
 
-  console.log("Edit Mode: ", editMode); //For debugging
-  console.log("Edit Index: ", editIndex); //For debugging
+  console.log(`Edit Mode: ${editMode}`);
+  console.log(`Edit Index: ${editIndex}`);
 }
 
 function deleteBook(bid) {
@@ -134,17 +124,13 @@ function deleteBook(bid) {
     return book.Bid == bid;
   });
 
-  console.log("Book to delete: ", books[index]); //For debugging
+  console.log("Book to delete: ", books[index]);
 
   const confirmDelete = confirm("Are you sure you want to delete this book?");
 
   if (confirmDelete) {
     books.splice(index, 1);
-  } else {
-    alert("Cancelled book deletion.");
   }
-
-  console.log("");
 
   renderBooksTable();
 }
