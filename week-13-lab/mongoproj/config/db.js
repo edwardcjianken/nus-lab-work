@@ -1,51 +1,5 @@
 const mongoose = require("mongoose");
-
-// User Schema
-const userSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: [true, "Name is required"],
-      trim: true,
-      maxlength: [50, "Name cannot be more than 50 characters"],
-    },
-    email: {
-      type: String,
-      required: [true, "Email is required"],
-      unique: true,
-      lowercase: true,
-      match: [
-        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-        "Please enter a valid email",
-      ],
-    },
-    password: {
-      type: String,
-      required: [true, "Password is required"],
-      minlength: [6, "Password must be at least 6 characters"],
-      select: false, // Don't include password in queries by default
-    },
-    role: {
-      type: String,
-      enum: ["user", "admin"],
-      default: "user",
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
-    updatedAt: {
-      type: Date,
-      default: Date.now,
-    },
-  },
-  {
-    timestamps: true, // Automatically manage createdAt and updatedAt
-  }
-);
-
-// Create and export the User model
-const User = mongoose.model("User", userSchema);
+const User = require("../models/user.model.js");
 
 // Method 1: Find all users
 const findAllUsers = async () => {
